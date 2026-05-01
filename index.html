@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Meta Viewport: Kunci utama agar pas di layar HP -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🌸 Dreamy Cosmic Garden - Ultimate Edition</title>
 
     <style>
@@ -16,6 +17,7 @@
             justify-content: center;
             align-items: center;
             font-family: 'Segoe UI', sans-serif;
+            touch-action: none; /* Mencegah zoom tidak sengaja di HP */
         }
 
         /* --- LAYAR PEMBUKA --- */
@@ -42,15 +44,10 @@
             transition: 0.3s;
             text-transform: uppercase;
             letter-spacing: 2px;
+            z-index: 10001;
         }
 
-        #startBtn:hover {
-            background: #ff8ab8;
-            color: white;
-            box-shadow: 0 0 30px rgba(255, 138, 184, 0.6);
-        }
-
-        /* --- BACKGROUND: NEBULA BERPUTAR --- */
+        /* --- BACKGROUND: NEBULA --- */
         .nebula-container {
             position: absolute;
             width: 150%; height: 150%;
@@ -78,7 +75,7 @@
             transform: rotate(-10deg);
         }
 
-        /* --- AWAN ESTETIK --- */
+        /* --- AWAN --- */
         .cloud {
             position: absolute;
             background: rgba(255, 255, 255, 0.03);
@@ -89,36 +86,7 @@
         }
         @keyframes moveClouds { from { left: -30%; } to { left: 130%; } }
 
-        /* --- BINTANG JATUH --- */
-        .shooting-star {
-            position: absolute;
-            width: 2px; height: 2px;
-            background: white;
-            opacity: 0; z-index: -2;
-            box-shadow: 0 0 10px 2px white;
-            animation: shoot 4s linear infinite;
-        }
-        @keyframes shoot {
-            0% { transform: translateX(0) translateY(0) rotate(-45deg) scale(0); opacity: 0; }
-            10% { opacity: 1; scale(1); }
-            20% { transform: translateX(-500px) translateY(500px) rotate(-45deg) scale(1); opacity: 0; }
-            100% { opacity: 0; }
-        }
-
-        /* --- BLINK-BLINK --- */
-        .blink {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            z-index: -1;
-            animation: blinkAnim var(--d) ease-in-out infinite;
-        }
-        @keyframes blinkAnim {
-            0%, 100% { opacity: 0.2; transform: scale(0.5); }
-            50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 8px white; }
-        }
-
-        /* --- EFEK KELOPAK GUGUR (BARU) --- */
+        /* --- EFEK KELOPAK GUGUR --- */
         .falling-petal {
             position: absolute;
             background: #ffb3c1;
@@ -133,9 +101,18 @@
             100% { transform: translateY(110vh) rotate(720deg) translateX(100px); opacity: 0; }
         }
 
-        /* --- BUNGA (Bentuk Asli) --- */
+        /* --- BUNGA UTAMA --- */
+        svg {
+            max-width: 90%;
+            max-height: 80vh;
+            display: block;
+            z-index: 5;
+            transition: transform 0.5s ease;
+        }
+
         .flower-stem { transform-origin: bottom center; animation: sway 7s ease-in-out infinite; filter: drop-shadow(0 0 15px rgba(255, 107, 138, 0.3)); }
         @keyframes sway { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
+        
         .petals { filter: drop-shadow(0 0 12px currentColor); animation: glow 3s ease-in-out infinite alternate; }
         @keyframes glow { from { opacity: 0.85; filter: drop-shadow(0 0 8px currentColor); } to { opacity: 1; filter: drop-shadow(0 0 20px currentColor); } }
 
@@ -146,6 +123,31 @@
             pointer-events: none;
             z-index: 10;
         }
+
+        /* --- RESPONSIVE UNTUK HP --- */
+        @media (max-width: 600px) {
+            .moon {
+                width: 50px;
+                height: 50px;
+                top: 5%;
+                right: 8%;
+                box-shadow: -8px 8px 0 1px #fffbe6;
+            }
+            svg {
+                transform: scale(1.1) translateY(50px); /* Memperbesar bunga sedikit agar fokus di layar HP */
+            }
+            #startBtn {
+                padding: 12px 25px;
+                font-size: 15px;
+            }
+        }
+        
+        /* Style untuk elemen tambahan */
+        .blink { position: absolute; background: white; border-radius: 50%; z-index: -1; animation: blinkAnim var(--d) ease-in-out infinite; }
+        @keyframes blinkAnim { 0%, 100% { opacity: 0.2; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1.2); } }
+        
+        .shooting-star { position: absolute; width: 2px; height: 2px; background: white; opacity: 0; z-index: -2; box-shadow: 0 0 10px 2px white; animation: shoot 4s linear infinite; }
+        @keyframes shoot { 0% { transform: translateX(0) translateY(0) rotate(-45deg) scale(0); opacity: 0; } 10% { opacity: 1; } 20% { transform: translateX(-500px) translateY(500px) rotate(-45deg) scale(1); opacity: 0; } 100% { opacity: 0; } }
     </style>
 </head>
 <body>
@@ -166,8 +168,7 @@
 <div id="petal-container"></div>
 <div class="vignette"></div>
 
-<!-- SVG Bunga (Bentuk Tetap Sama) -->
-<svg width="100%" height="100%" viewBox="0 0 600 900" style="position: relative; z-index: 5;">
+<svg viewBox="0 0 600 900">
     <defs>
         <linearGradient id="stemGrad" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stop-color="#4a9c3d"/><stop offset="60%" stop-color="#3d7a32"/><stop offset="100%" stop-color="#5d3a1a"/>
@@ -180,6 +181,7 @@
         </radialGradient>
     </defs>
 
+    <!-- Bunga Kiri -->
     <g class="flower-stem" style="animation-delay: -1.5s;">
         <path d="M300 850 C280 700, 150 500, 160 320" stroke="url(#stemGrad)" stroke-width="6" stroke-linecap="round" fill="none" />
         <g transform="translate(-140, 20)">
@@ -189,6 +191,7 @@
         </g>
     </g>
 
+    <!-- Bunga Kanan -->
     <g class="flower-stem" style="animation-delay: -3s;">
         <path d="M300 850 C320 700, 450 500, 440 320" stroke="url(#stemGrad)" stroke-width="6" stroke-linecap="round" fill="none" />
         <g transform="translate(140, 20)">
@@ -198,6 +201,7 @@
         </g>
     </g>
 
+    <!-- Bunga Tengah -->
     <g class="flower-stem">
         <path d="M300 850 C300 700, 310 500, 300 180" stroke="url(#stemGrad)" stroke-width="10" stroke-linecap="round" fill="none" />
         <ellipse cx="270" cy="750" rx="40" ry="20" fill="#2d8a4a" transform="rotate(-20 270 750)"/><ellipse cx="330" cy="760" rx="45" ry="22" fill="#2d8a4a" transform="rotate(20 330 760)"/>
@@ -218,17 +222,16 @@
         overlay.style.opacity = '0'; 
         setTimeout(() => { 
             overlay.style.display = 'none'; 
-            // Mulai buat kelopak gugur setelah musik menyala
-            setInterval(createPetal, 400); 
+            setInterval(createPetal, 450); 
         }, 1500);
     });
 
-    // Generate Blink-Blink
+    // Blink-blink
     const blinkContainer = document.getElementById('blink-container');
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 60; i++) {
         const blink = document.createElement('div');
         blink.className = 'blink';
-        const size = Math.random() * 3 + 1;
+        const size = Math.random() * 2 + 1;
         blink.style.width = size + 'px';
         blink.style.height = size + 'px';
         blink.style.left = Math.random() * 100 + 'vw';
@@ -238,58 +241,58 @@
         blinkContainer.appendChild(blink);
     }
 
-    // Generate Awan
+    // Awan
     const cloudContainer = document.getElementById('cloud-container');
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 4; i++) {
         const cloud = document.createElement('div');
         cloud.className = 'cloud';
-        cloud.style.width = (Math.random() * 250 + 200) + 'px';
-        cloud.style.height = (Math.random() * 100 + 80) + 'px';
-        cloud.style.top = Math.random() * 70 + 'vh';
-        cloud.style.setProperty('--t', (Math.random() * 20 + 40) + 's');
-        cloud.style.animationDelay = -(Math.random() * 40) + 's';
+        cloud.style.width = (Math.random() * 150 + 150) + 'px';
+        cloud.style.height = (Math.random() * 60 + 60) + 'px';
+        cloud.style.top = Math.random() * 60 + 'vh';
+        cloud.style.setProperty('--t', (Math.random() * 20 + 30) + 's');
         cloudContainer.appendChild(cloud);
     }
 
-    // Fungsi Membuat Kelopak Gugur
     function createPetal() {
         const container = document.getElementById('petal-container');
         const p = document.createElement('div');
         p.className = 'falling-petal';
         p.style.left = Math.random() * 100 + 'vw';
-        const size = Math.random() * 10 + 7;
+        const size = Math.random() * 8 + 6;
         p.style.width = size + 'px';
-        p.style.height = size + 2 + 'px';
-        p.style.animationDuration = (Math.random() * 4 + 5) + 's';
+        p.style.height = (size + 2) + 'px';
+        p.style.animationDuration = (Math.random() * 3 + 4) + 's';
         container.appendChild(p);
-        setTimeout(() => p.remove(), 8000);
+        setTimeout(() => p.remove(), 7000);
     }
 
-    // Shooting Stars
     function createShootingStar() {
         const container = document.getElementById('shooting-stars');
         const star = document.createElement('div');
         star.className = 'shooting-star';
         star.style.left = Math.random() * 100 + 'vw';
         star.style.top = Math.random() * 40 + 'vh';
-        star.style.animationDuration = (Math.random() * 2 + 2) + 's';
         container.appendChild(star);
         setTimeout(() => star.remove(), 4000);
     }
-    setInterval(createShootingStar, 5000);
+    setInterval(createShootingStar, 6000);
 
-    // Jejak Kursor
-    document.addEventListener('mousemove', (e) => {
+    // Mouse/Touch Trail
+    const handleMove = (e) => {
+        const x = e.touches ? e.touches[0].clientX : e.clientX;
+        const y = e.touches ? e.touches[0].clientY : e.clientY;
         const p = document.createElement('div');
         p.style.position = 'fixed';
-        p.style.left = e.clientX + 'px'; p.style.top = e.clientY + 'px';
+        p.style.left = x + 'px'; p.style.top = y + 'px';
         p.style.width = '2px'; p.style.height = '2px';
         p.style.background = 'white'; p.style.boxShadow = '0 0 10px 1px #ff8ab8';
         p.style.borderRadius = '50%'; p.style.pointerEvents = 'none'; p.style.zIndex = '999';
         document.body.appendChild(p);
         p.animate([{ transform: 'scale(1)', opacity: 1 }, { transform: 'scale(3)', opacity: 0 }], { duration: 600 });
         setTimeout(() => p.remove(), 600);
-    });
+    };
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('touchmove', handleMove);
 </script>
 
 </body>
